@@ -56,7 +56,7 @@ class ExamSystem {
         questions.add(question);
 
         options = List.of("Aggregation", "Composition", "Encapsulation", "Association");
-        question = new Question(" Q6) What is it called if a child object gets killed when parent object is killed?", options, 1,1);
+        question = new Question("Q6) What is it called if a child object gets killed when parent object is killed?", options, 1,1);
         questions.add(question);
 
         options = List.of("At run time", "At compile time", "At coding time", "At execution time");
@@ -148,7 +148,7 @@ class ExamUI extends JFrame implements ActionListener {
         this.examSystem = examSystem;
 
         setTitle("Online Examination System");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLayout(new BorderLayout());
 
         initializeComponents();
@@ -192,7 +192,7 @@ class ExamUI extends JFrame implements ActionListener {
             if (optionSelected != -1) {
                 int confirmResult = JOptionPane.showConfirmDialog(this, "Are you sure you want to save and go to the next question?", "Confirmation", JOptionPane.YES_NO_OPTION);
                 if (confirmResult == JOptionPane.YES_OPTION) {
-                    examSystem.questions.get(index).save = 1; // Mark the question as saved
+                    examSystem.questions.get(index).save = 1; 
                     if (optionSelected==examSystem.questions.get(index).correctOption) {
                         correct++;
                         examSystem.calculateQuestionMarks(examSystem.questions.get(index));     
@@ -322,8 +322,7 @@ class ExamUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == bookmarkButton) {
-            examSystem.bookmarkCurrentQuestion();
-            // You can provide feedback to the user that the question is bookmarked
+            buttonArray.get(index).setBackground(Color.BLUE);
         }else {
             for (int i = 0; i < 4; i++) {
                 if (optionButtons[i].isSelected()) {
@@ -345,12 +344,12 @@ class ExamUI extends JFrame implements ActionListener {
                     "Good Correct: " + examSystem.Good + "\n" +
                     "Tough Correct: " + examSystem.Tough + "\n" +
                     "Complex Correct: " + examSystem.Complex +
-                    "\n\nDo you want to view bookmarked questions?",
+                    "\n\nDo you want to view the solutions?",
             "Results",
             JOptionPane.YES_NO_OPTION);
 
         if (option == JOptionPane.YES_OPTION) {
-            Bookmark bookmarkFrame = new Bookmark(examSystem);
+            Solution bookmarkFrame = new Solution(examSystem);
             bookmarkFrame.setVisible(true);
         }
         dispose();

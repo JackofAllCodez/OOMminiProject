@@ -1,24 +1,20 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.List;
 
-public class Bookmark extends JFrame {
+public class Solution extends JFrame {
     private ExamSystem examSystem;
     private int currentIndex;
 
     private JLabel questionLabel;
     private JButton prevButton;
     private JButton nextButton;
-    List<Integer> bookmarkedQuestions;
 
-    public Bookmark(ExamSystem examSystem) {
+    public Solution(ExamSystem examSystem) {
         this.examSystem = examSystem;
         currentIndex = 0;
 
-        bookmarkedQuestions = examSystem.getBookmarkedQuestions();
-
-        setTitle("Bookmarked Questions");
+        setTitle("Solutions");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -58,29 +54,28 @@ public class Bookmark extends JFrame {
     }
 
     private void displayCurrentQuestion() {
-        if (!bookmarkedQuestions.isEmpty()) {
-            int questionIndex = bookmarkedQuestions.get(currentIndex);
-            Question currentQuestion = examSystem.questions.get(questionIndex);
+        if (currentIndex < examSystem.questions.size()) {
+            Question currentQuestion = examSystem.questions.get(currentIndex);
             questionLabel.setText(currentQuestion.question);
-    
-            JPanel questionPanel = createQuestionPanel(); 
+
+            JPanel questionPanel = createQuestionPanel();
             JPanel ansPanel = new JPanel(new GridLayout(12, 1));
-            JLabel ansLabel = new JLabel("Ans: ");
+            JLabel ansLabel = new JLabel("Correct Answer: ");
             int correctOptionIndex = currentQuestion.correctOption;
-            ansLabel.setText("Ans: " + currentQuestion.options.get(correctOptionIndex));
+            ansLabel.setText("Correct Answer: " + currentQuestion.options.get(correctOptionIndex));
             ansPanel.add(ansLabel);
             questionPanel.add(ansPanel);
             getContentPane().removeAll();
             getContentPane().add(questionPanel, BorderLayout.CENTER);
             getContentPane().add(createNavigationPanel(), BorderLayout.SOUTH);
-    
+
             revalidate();
             repaint();
         } else {
-            questionLabel.setText("No bookmarked questions.");
+            questionLabel.setText("No more questions.");
         }
     }
-    
+
     private void goToPreviousQuestion(ActionEvent e) {
         if (currentIndex > 0) {
             currentIndex--;
@@ -89,9 +84,16 @@ public class Bookmark extends JFrame {
     }
 
     private void goToNextQuestion(ActionEvent e) {
-        if (currentIndex < bookmarkedQuestions.size() - 1) {
+        if (currentIndex < examSystem.questions.size() - 1) {
             currentIndex++;
             displayCurrentQuestion();
         }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            ExamSystem examSystem = new ExamSystem();
+            new Solution(examSystem);
+        });
     }
 }

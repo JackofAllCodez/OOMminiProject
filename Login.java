@@ -30,11 +30,7 @@ public class Login extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!usernameField.getText().isEmpty()) {
-                    dispose();
-                    SwingUtilities.invokeLater(() -> {
-                        ExamSystem examSystem = new ExamSystem();
-                        new ExamUI(examSystem);
-                    });
+                    showRulesDialog();
                 }
             }
         });
@@ -50,6 +46,36 @@ public class Login extends JFrame {
 
         setLocationRelativeTo(null);
         setVisible(true);
+    }
+
+    private void showRulesDialog() {
+        JTextArea rulesTextArea = new JTextArea("Rules:\n"+
+                        "1. Marking Scheme: Good (1 mark), Tough (2 marks), Complex (3 marks).\n" +
+                        "2. You can't close the exam unless you submit.\n" +
+                        "3. Once you save a question, you cannot revisit it, and it will become green.\n" +
+                        "4. If you bookmark a question, it will become blue on the button panel.\n\n" +
+                        "Do you want to proceed to the exam?"
+        );
+
+        rulesTextArea.setEditable(false);
+        rulesTextArea.setLineWrap(true);
+        rulesTextArea.setWrapStyleWord(true);
+        rulesTextArea.setSize(400,400);
+
+        int option = JOptionPane.showConfirmDialog(
+                this,
+                new JScrollPane(rulesTextArea),
+                "Exam Rules",
+                JOptionPane.YES_NO_OPTION
+        );
+
+        if (option == JOptionPane.YES_OPTION) {
+            dispose();
+            SwingUtilities.invokeLater(() -> {
+                ExamSystem examSystem = new ExamSystem();
+                new ExamUI(examSystem);
+            });
+        }
     }
 
     public static void main(String[] args) {
